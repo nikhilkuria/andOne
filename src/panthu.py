@@ -4,6 +4,7 @@ import argparse
 import json
 
 from teams import team_stats, TeamNotFoundException
+from visual import tables
 
 
 TEAM_ROSTER_ACTION = "roster"
@@ -65,6 +66,6 @@ if __name__ == "__main__":
         name = args.name
         response = _get_team_roster(name)
         if response:
-            print(json.dumps(response, indent=4, sort_keys=True))
-
+            #print(json.dumps(response, indent=4, sort_keys=True))
+            print(tables.build_tables_from_json(["PLAYER", "POSITION", "HEIGHT", "WEIGHT"], list(response)))
 
