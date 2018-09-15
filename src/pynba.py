@@ -3,7 +3,8 @@ import logging
 import argparse
 import json
 
-from teams import team_stats
+from teams import team_stats, TeamNotFoundException
+
 
 TEAM_ROSTER_ACTION = "roster"
 
@@ -25,11 +26,22 @@ def _configure_arg_parser():
     parser.add_argument("name", help="The name of the team or player", type=str)
 
 
+def _get_team_roster(name):
+    logger = logging.getLogger('pynba.main')
+    try:
+        logger.info('{action_name} action called on {name}'.format(action_name=TEAM_ROSTER_ACTION, name=name))
+        response = team_stats.get_team_roster(name)
+        return response
+    except TeamNotFoundException:
+        logger.error('No team found for the given name {name}. '
+                     'Use either the city name, franchise name or the 3 digit code'
+                     .format(name=name))
+
+    return None
+
+
 if __name__ == "__main__":
     _configure_logger()
-
-    cli_logger = logging.getLogger('pynba.cli')
-    cli_logger.info("Welcome to pynba")
 
     parser = argparse.ArgumentParser()
     _configure_arg_parser()
@@ -37,7 +49,7 @@ if __name__ == "__main__":
 
     if args.action == TEAM_ROSTER_ACTION:
         name = args.name
-        cli_logger.info('{} action called on {}'.format(TEAM_ROSTER_ACTION, name))
-        response = team_stats.get_team_roster(name)
-        print(json.dumps(response, indent=4, sort_keys=True))
+        response = _get_team_roster(name)
+        if response:
+            print(json.dumps(response, indent=4, sort_keys=True))
 
