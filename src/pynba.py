@@ -1,6 +1,9 @@
 #!/usr/bin/python
 import logging
 import argparse
+import json
+
+from teams import team_stats
 
 TEAM_ROSTER_ACTION = "roster"
 
@@ -10,7 +13,7 @@ def _configure_logger():
     logger = logging.getLogger('pynba')
     logger.setLevel(logging.INFO)
 
-    file_handler = logging.FileHandler('pynba.log')
+    file_handler = logging.FileHandler('../pynba.log')
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(formatter)
 
@@ -35,4 +38,6 @@ if __name__ == "__main__":
     if args.action == TEAM_ROSTER_ACTION:
         name = args.name
         cli_logger.info('{} action called on {}'.format(TEAM_ROSTER_ACTION, name))
+        response = team_stats.get_team_roster(name)
+        print(json.dumps(response, indent=4, sort_keys=True))
 
