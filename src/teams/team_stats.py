@@ -55,6 +55,12 @@ def _parse_team_name(team_name_input):
 
 
 def get_team_roster(team_name_input):
+    """
+    from a given input of a team name, return the current roster as a json string
+    can throw TeamNotFoundException
+    :param team_name_input:
+    :return: team roster as string
+    """
     team_name, team_id = _parse_team_name(team_name_input)
     logger.info('Fetching roster for team {team_name}'.format(team_name=team_name))
 
