@@ -1,10 +1,10 @@
 #!/usr/bin/python
 import logging
 import argparse
-import json
 
 from teams import team_stats, TeamNotFoundException
 from visual import tables
+from constants import TEAM_HEADERS
 
 
 TEAM_ROSTER_ACTION = "roster"
@@ -31,6 +31,15 @@ def _configure_arg_parser():
     """
     parser.add_argument("action", help="The action to perform", type=str)
     parser.add_argument("name", help="The name of the team or player", type=str)
+
+
+def _show_results(result_string):
+    """
+    From the result string, present the result to the user
+    A simple print statement for now
+    :param result_string:
+    """
+    print(result_string)
 
 
 def _get_team_roster(team_name_input):
@@ -66,6 +75,5 @@ if __name__ == "__main__":
         name = args.name
         response = _get_team_roster(name)
         if response:
-            #print(json.dumps(response, indent=4, sort_keys=True))
-            print(tables.build_tables_from_json(["PLAYER", "POSITION", "HEIGHT", "WEIGHT"], list(response)))
-
+            formatted_response = tables.build_tables_from_json(TEAM_HEADERS, list(response))
+            _show_results(formatted_response)
