@@ -19,7 +19,8 @@ class StackedGraph:
         Identifies the scale of the graph
         Meaning, how much is the value of one block, self.TICK
         """
-        min_value = int(min(self._record_values))
+        non_zero_records = [record for record in self._record_values if record > 0]
+        min_value = min(non_zero_records)
         # Get the floor value of the nearest power of 10
         scale = math.pow(10, math.floor(math.log10(min_value)))
         self._scale = scale
