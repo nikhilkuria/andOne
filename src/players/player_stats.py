@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 
 from nba_py import player
 
@@ -12,7 +13,6 @@ def _format_results(raw_response):
     for entry in raw_response:
         season = entry['SEASON_ID']
         season_stats = dict()
-        season_stats['SEASON'] = season
         season_stats['GAMES PLAYED'] = entry['GP']
         season_stats['GAMES STARTED'] = entry['GS']
         season_stats['MINUTES'] = entry['MIN']
@@ -49,3 +49,11 @@ def get_player_stats(first_name, last_name):
 
     return response
 
+
+def get_progress_from_player_stats(response):
+    progress_stats = defaultdict(dict)
+    for season, season_stats in response.items():
+        for stat_name, stats_value in season_stats.items():
+            progress_stats[stat_name][season] = stats_value
+
+    return progress_stats

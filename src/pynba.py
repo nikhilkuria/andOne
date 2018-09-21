@@ -5,7 +5,7 @@ import json
 
 from teams import team_stats, TeamNotFoundException
 from players import player_stats, PlayerNotFoundException
-from visual import tables
+from visual import tables, StackedGraph
 from constants import TEAM_HEADERS, actions
 
 
@@ -72,15 +72,16 @@ def _get_player_stats(first_name, last_name):
                     .format(action_name=actions.PLAYER_SUMMARY_ACTION,
                             first_name=first_name,
                             last_name=last_name))
-        response_string = player_stats.get_player_stats(first_name, last_name)
+        player_stats_response = player_stats.get_player_stats(first_name, last_name)
+        player_progress = player_stats.get_progress_from_player_stats(player_stats_response)
     except PlayerNotFoundException:
         error_message = 'No player found for the given name, {first_name} {last_name}'\
                         .format(first_name=first_name,
                                 last_name=last_name)
         logger.error(error_message)
-        response_string = error_message
+        return error_message
 
-    return response_string
+    return player_progress
 
 
 if __name__ == "__main__":
@@ -100,4 +101,6 @@ if __name__ == "__main__":
     elif args.action == actions.PLAYER_SUMMARY_ACTION:
         first_name, last_name = args.name.split(sep=" ", maxsplit=1)
         response = _get_player_stats(first_name,last_name)
-        print(json.dumps(response, indent=2))
+        for stat_name, stats in response.items():
+            print(StackedGraph(list(stats.keys()), list(stats.values()), stat_name))
+        #print(json.dumps(response, indent=2))
