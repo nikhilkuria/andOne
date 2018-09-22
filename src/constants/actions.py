@@ -1,0 +1,3 @@
+
+TEAM_ROSTER_ACTION = "roster"
+PLAYER_SUMMARY_ACTION = "player"

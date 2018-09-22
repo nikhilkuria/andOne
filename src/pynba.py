@@ -1,13 +1,12 @@
 #!/usr/bin/python
 import logging
 import argparse
+import json
 
 from teams import team_stats, TeamNotFoundException
-from visual import tables
-from constants import TEAM_HEADERS
-
-
-TEAM_ROSTER_ACTION = "roster"
+from players import player_stats, PlayerNotFoundException
+from visual import tables, stacked_graph
+from constants import TEAM_HEADERS, actions
 
 
 def _configure_logger():
@@ -51,7 +50,9 @@ def _get_team_roster(team_name_input):
     logger = logging.getLogger('pynba.main')
 
     try:
-        logger.info('{action_name} action called on {name}'.format(action_name=TEAM_ROSTER_ACTION, name=team_name_input))
+        logger.info('{action_name} action called on {name}'
+                    .format(action_name=actions.TEAM_ROSTER_ACTION,
+                            name=team_name_input))
         response_string = team_stats.get_team_roster(team_name_input)
     except TeamNotFoundException:
         error_message = 'No team found for the given name {name}. ' \
@@ -63,6 +64,26 @@ def _get_team_roster(team_name_input):
     return response_string
 
 
+def _get_player_stats(first_name, last_name):
+    logger = logging.getLogger('pynba.main')
+
+    try:
+        logger.info('{action_name} action called on first_name = {first_name} and last_name = {last_name}'
+                    .format(action_name=actions.PLAYER_SUMMARY_ACTION,
+                            first_name=first_name,
+                            last_name=last_name))
+        player_stats_response = player_stats.get_player_stats(first_name, last_name)
+        player_progress = player_stats.get_progress_from_player_stats(player_stats_response)
+    except PlayerNotFoundException:
+        error_message = 'No player found for the given name, {first_name} {last_name}'\
+                        .format(first_name=first_name,
+                                last_name=last_name)
+        logger.error(error_message)
+        return error_message
+
+    return player_progress
+
+
 if __name__ == "__main__":
     _configure_logger()
 
@@ -71,9 +92,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Do action as per the argument
-    if args.action == TEAM_ROSTER_ACTION:
+    if args.action == actions.TEAM_ROSTER_ACTION:
         name = args.name
         response = _get_team_roster(name)
         if response:
             formatted_response = tables.build_tables_from_json(TEAM_HEADERS, list(response))
             _show_results(formatted_response)
+    elif args.action == actions.PLAYER_SUMMARY_ACTION:
+        first_name, last_name = args.name.split(sep=" ", maxsplit=1)
+        response = _get_player_stats(first_name,last_name)
+        for stat_name, stats in response.items():
+            _show_results(stacked_graph.build_stacked_graph(list(stats.keys()), list(stats.values()), stat_name))
