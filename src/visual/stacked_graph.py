@@ -9,32 +9,27 @@ class StackedGraph:
     def __init__(self, record_labels, record_values, graph_title):
         self._record_labels = record_labels
         self._record_values = record_values
-        self._scaled_values = [value*100 for value in record_values]
+        self._scaled_values = [int(value*100) for value in record_values]
         self._graph_title = graph_title
-        self._set_scale()
-        self._set_width()
+        self._scale = self._get_scale()
+        self._width = self._get_width()
 
-    def _set_scale(self):
+    def _get_scale(self):
         """
         Identifies the scale of the graph
         Meaning, how much is the value of one block, self.TICK
         """
-        non_zero_records = [record for record in self._record_values if record > 0]
+        non_zero_records = [record for record in self._scaled_values if record > 0]
         min_value = min(non_zero_records)
         # Get the floor value of the nearest power of 10
         scale = math.pow(10, math.floor(math.log10(min_value)))
-        self._scale = scale
+        return scale
 
-    def _set_width(self):
+    def _get_width(self):
         """
         Sets the approximate width of the graph
         """
-        if self._record_values is None or len(self._record_values) == 0:
-            self._width = 0
-        else:
-            max_value = max(self._record_values)
-            len_graph = self._get_num_units(max_value)
-            self._width = len_graph
+        return len(self._graph_title)
 
     def _get_num_units(self, value):
         """
@@ -53,9 +48,11 @@ class StackedGraph:
         line = [self.SEPARATOR] * self._width
         return ''.join(line)
 
-    def _get_single_horizontal_line_graph(self, label, value):
+    def _get_single_horizontal_line_graph(self, label, value, scaled_value):
         """
         Build a string representation of a row
+        :return:
+        :param scaled_value: the value on which the scale is built
         :param label: label of the row
         :param value: value of the row
         :return: String representation of a row
@@ -65,7 +62,7 @@ class StackedGraph:
         line.append(str(label))
 
         # the blocks in the line
-        large_units = self._get_num_units(value)
+        large_units = self._get_num_units(scaled_value)
         line_graph_elements = [self.TICK] * large_units
         line_graph = ''.join(line_graph_elements)
         line.append(line_graph)
@@ -103,8 +100,8 @@ class StackedGraph:
             graph.append(self._get_horizontal_line())
 
         # A row for each value
-        for label, value in zip(self._record_labels, self._record_values):
-            single_line = self._get_single_horizontal_line_graph(label, value)
+        for label, value, scaled_value in zip(self._record_labels, self._record_values, self._scaled_values):
+            single_line = self._get_single_horizontal_line_graph(label, value, scaled_value)
             graph.append(single_line)
 
         # Bring everything together
