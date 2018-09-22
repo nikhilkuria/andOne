@@ -103,4 +103,3 @@ if __name__ == "__main__":
         response = _get_player_stats(first_name,last_name)
         for stat_name, stats in response.items():
             print(StackedGraph(list(stats.keys()), list(stats.values()), stat_name))
-        #print(json.dumps(response, indent=2))
