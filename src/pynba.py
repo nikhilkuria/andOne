@@ -5,7 +5,7 @@ import json
 
 from teams import team_stats, TeamNotFoundException
 from players import player_stats, PlayerNotFoundException
-from visual import tables, StackedGraph
+from visual import tables, stacked_graph
 from constants import TEAM_HEADERS, actions
 
 
@@ -102,4 +102,4 @@ if __name__ == "__main__":
         first_name, last_name = args.name.split(sep=" ", maxsplit=1)
         response = _get_player_stats(first_name,last_name)
         for stat_name, stats in response.items():
-            print(StackedGraph(list(stats.keys()), list(stats.values()), stat_name))
+            _show_results(stacked_graph.build_stacked_graph(list(stats.keys()), list(stats.values()), stat_name))

@@ -1,6 +1,17 @@
 import math
 
 
+def build_stacked_graph(labels, values, title):
+    """
+    Returns an instance of stacked graph
+    :param labels: labels for each row
+    :param values: values for each row
+    :param title: the tile of the graph
+    :return: StackedGraph
+    """
+    return StackedGraph(labels, values, title)
+
+
 class StackedGraph:
 
     TICK = '▇'
