@@ -1,15 +1,5 @@
 import math
-
-
-def build_stacked_graph(labels, values, title):
-    """
-    Returns an instance of stacked graph
-    :param labels: labels for each row
-    :param values: values for each row
-    :param title: the tile of the graph
-    :return: StackedGraph
-    """
-    return StackedGraph(labels, values, title)
+from typing import List, Type
 
 
 class StackedGraph:
@@ -17,7 +7,7 @@ class StackedGraph:
     TICK = '▇'
     SEPARATOR = '-'
 
-    def __init__(self, record_labels, record_values, graph_title):
+    def __init__(self, record_labels: List, record_values: List, graph_title: str):
         self._record_labels = record_labels
         self._record_values = record_values
         self._scaled_values = [int(value*100) for value in record_values]
@@ -59,7 +49,7 @@ class StackedGraph:
         line = [self.SEPARATOR] * self._width
         return ''.join(line)
 
-    def _get_single_horizontal_line_graph(self, label, value, scaled_value):
+    def _get_single_horizontal_line_graph(self, label: str, value: float, scaled_value: int):
         """
         Build a string representation of a row
         :return:
@@ -117,3 +107,14 @@ class StackedGraph:
 
         # Bring everything together
         return '\n'.join(graph)
+
+
+def build_stacked_graph(labels: List, values: List, title: str) -> Type[StackedGraph]:
+    """
+    Returns an instance of stacked graph
+    :param labels: labels for each row
+    :param values: values for each row
+    :param title: the tile of the graph
+    :return: StackedGraph
+    """
+    return StackedGraph(labels, values, title)
