@@ -6,7 +6,7 @@ import json
 from teams import team_stats, TeamNotFoundException
 from players import player_stats, PlayerNotFoundException
 from visual import tables, stacked_graph
-from constants import TEAM_HEADERS, actions
+from constants import TEAM_ROSTER_HEADERS, actions
 
 
 def _configure_logger():
@@ -96,7 +96,7 @@ if __name__ == "__main__":
         name = args.name
         response = _get_team_roster(name)
         if response:
-            formatted_response = tables.build_tables_from_json(TEAM_HEADERS, list(response))
+            formatted_response = tables.build_tables_from_json(TEAM_ROSTER_HEADERS, list(response))
             _show_results(formatted_response)
     elif args.action == actions.PLAYER_SUMMARY_ACTION:
         first_name, last_name = args.name.split(sep=" ", maxsplit=1)
