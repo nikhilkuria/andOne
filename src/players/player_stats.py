@@ -1,5 +1,6 @@
 import logging
 from collections import defaultdict
+from typing import Dict, List, DefaultDict
 
 from nba_py import player
 
@@ -8,7 +9,7 @@ from .player_not_found_exception import PlayerNotFoundException
 logger = logging.getLogger('pynba.player')
 
 
-def _format_results(raw_response):
+def _format_results(raw_response: List[Dict]) -> Dict:
     response = dict()
     for entry in raw_response:
         season = entry['SEASON_ID']
@@ -27,7 +28,7 @@ def _format_results(raw_response):
     return response
 
 
-def get_player_stats(first_name, last_name):
+def get_player_stats(first_name: str, last_name: str) -> Dict:
     try:
         player_id = player.get_player(first_name, last_name)
         logger.info("Fetching the player id for {first_name}, {last_name} - {player_id}"
@@ -50,7 +51,7 @@ def get_player_stats(first_name, last_name):
     return response
 
 
-def get_progress_from_player_stats(response):
+def get_progress_from_player_stats(response: str) -> DefaultDict:
     progress_stats = defaultdict(dict)
     for season, season_stats in response.items():
         for stat_name, stats_value in season_stats.items():

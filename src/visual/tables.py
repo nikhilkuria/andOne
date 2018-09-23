@@ -1,7 +1,9 @@
+from typing import List, Type
+
 from beautifultable import BeautifulTable
 
 
-def build_tables_from_json(columns, data):
+def build_tables_from_json(columns: List, data: List) -> Type[BeautifulTable]:
     """
     Builds a table string for given header and contents
     :param columns: The table header as a list

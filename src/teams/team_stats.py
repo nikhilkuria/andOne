@@ -1,4 +1,5 @@
 import logging
+from typing import Tuple
 
 from nba_py import team
 from nba_py.constants import TEAMS
@@ -9,7 +10,7 @@ from teams import TeamNotFoundException
 logger = logging.getLogger('pynba.teams')
 
 
-def _match_team_from_input(team_name_input):
+def _match_team_from_input(team_name_input: str) -> str:
     """
     iterate through the list of teams to find a match
     from the team_name_input
@@ -24,10 +25,11 @@ def _match_team_from_input(team_name_input):
         if team_name_input == city or team_name_input == franchise:
             return team_details
 
-    return None
+    logger.error("Could not map the input {input} to a known team".format(input=team_name_input))
+    raise TeamNotFoundException
 
 
-def _parse_team_name(team_name_input):
+def _parse_team_name(team_name_input: str) -> Tuple[str, int]:
     """
     Map the team_name input to a known team
     The input can be one of the following
@@ -44,17 +46,13 @@ def _parse_team_name(team_name_input):
     else:
         team_record = _match_team_from_input(team_name_input)
 
-    if team_record is None:
-        logger.error("Could not map the input {input} to a known team".format(input=team_name_input))
-        raise TeamNotFoundException
-
     team_name = "{city} {franchise}".format(city=team_record['city'], franchise=team_record['name'])
     team_id = team_record['id']
 
     return team_name, team_id
 
 
-def get_team_roster(team_name_input):
+def get_team_roster(team_name_input: str) -> str:
     """
     from a given input of a team name, return the current roster as a json string
     can throw TeamNotFoundException
