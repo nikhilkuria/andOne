@@ -14,14 +14,14 @@ def _match_team_from_input(team_name_input: str) -> str:
     """
     iterate through the list of teams to find a match
     from the team_name_input
-    :param team_name_input:
+    :param team_name_input: the team name as city name, franchise name, or team code in upper case
     """
     for team_code in TEAMS:
         team_details = TEAMS[team_code]
 
         city = team_details['city'].upper()
         franchise = team_details['name'].upper()
-
+        print("{}-{}.".format(city, franchise))
         if team_name_input == city or team_name_input == franchise:
             return team_details
 
@@ -41,8 +41,10 @@ def _parse_team_name(team_name_input: str) -> Tuple[str, int]:
     """
     team_name_input = team_name_input.upper()
 
+    # Check if it's the team code, then read directly from the constants
     if team_name_input in TEAMS:
         team_record = TEAMS[team_name_input]
+    # Else, see it it's a city name or a franchise name
     else:
         team_record = _match_team_from_input(team_name_input)
 
