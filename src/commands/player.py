@@ -38,8 +38,7 @@ class Player:
                         .format(first_name=first_name,
                                 last_name=last_name))
 
-            player_stats_response = player_stats.get_player_stats(first_name, last_name)
-            player_yoy = player_stats.get_progress_from_player_stats(player_stats_response)
+            player_yoy = player_stats.get_player_yoy_stats(first_name, last_name)
             if stat_names:
                 for stat_name in stat_names:
                     stats = player_yoy[stat_name]

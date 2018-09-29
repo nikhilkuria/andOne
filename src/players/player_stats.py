@@ -29,6 +29,12 @@ def _format_results(raw_response: List[Dict]) -> Dict:
 
 
 def get_player_stats(first_name: str, last_name: str) -> Dict:
+    """
+    Returns the stats for a player in standard format
+    :param first_name:
+    :param last_name:
+    :return:
+    """
     try:
         player_id = player.get_player(first_name, last_name)
         logger.info("Fetching the player id for {first_name}, {last_name} - {player_id}"
@@ -46,15 +52,23 @@ def get_player_stats(first_name: str, last_name: str) -> Dict:
                 .format(first_name=first_name,
                         last_name=last_name))
 
-    response = _format_results(raw_response)
+    player_stats = _format_results(raw_response)
 
-    return response
+    return player_stats
 
 
-def get_progress_from_player_stats(response: str) -> DefaultDict:
-    progress_stats = defaultdict(dict)
-    for season, season_stats in response.items():
+def get_player_yoy_stats(first_name: str, last_name: str) -> DefaultDict:
+    """
+    Returns the Year on Year stats for a player
+    :param first_name:
+    :param last_name:
+    :return:
+    """
+    yoy_stats = defaultdict(dict)
+    player_stats = get_player_stats(first_name=first_name, last_name=last_name)
+
+    for season, season_stats in player_stats.items():
         for stat_name, stats_value in season_stats.items():
-            progress_stats[stat_name][season] = stats_value
+            yoy_stats[stat_name][season] = stats_value
 
-    return progress_stats
+    return yoy_stats
