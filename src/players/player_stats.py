@@ -2,12 +2,13 @@ import logging
 from collections import defaultdict
 from typing import Dict, List, DefaultDict
 
-from nba_py import player
+from nba_api.stats.endpoints.playercareerstats import PlayerCareerStats
+from nba_api.stats.static import players as PlayerHelper
 
 from .player_not_found_exception import PlayerNotFoundException
+from .multiple_players_found_exception import MultiplePlayersFoundException
 
 logger = logging.getLogger('pynba.player')
-
 
 def _format_results(raw_response: List[Dict]) -> Dict:
     response = dict()
@@ -35,24 +36,33 @@ def get_player_stats(first_name: str, last_name: str) -> Dict:
     :param last_name:
     :return:
     """
-    try:
-        player_id = player.get_player(first_name, last_name)
-        logger.info("Fetching the player id for {first_name}, {last_name} - {player_id}"
-                    .format(first_name=first_name,
-                            last_name=last_name,
-                            player_id=player_id))
+    players = PlayerHelper.find_players_by_full_name("{first_name} {last_name}".format(
+        first_name=first_name,
+        last_name=last_name
+    ))
 
-        raw_response = player.PlayerCareer(player_id).regular_season_totals()
-    except StopIteration:
+    if len(players) > 1 :
+        logger.error("Multiple players found with the name - {first_name} {last_name}"
+         .format(first_name=first_name,
+                 last_name=last_name))
+        raise MultiplePlayersFoundException
+    if len(players) == 0:
         logger.error("Could not find a player with the name - {first_name} {last_name}"
-                     .format(first_name=first_name,
-                             last_name=last_name))
+         .format(first_name=first_name,
+                 last_name=last_name))
         raise PlayerNotFoundException
-    logger.info("Formatting the raw response for {first_name}, {last_name}"
-                .format(first_name=first_name,
-                        last_name=last_name))
 
-    player_stats = _format_results(raw_response)
+    player_id = players[0]['id']
+
+    logger.info("Fetching the player id for {first_name}, {last_name} - {player_id}"
+                .format(first_name=first_name,
+                        last_name=last_name,
+                        player_id=player_id))
+
+    all_player_stats = PlayerCareerStats(player_id).get_normalized_dict()
+    player_season_total_stats = all_player_stats['SeasonTotalsRegularSeason']
+
+    player_stats = _format_results(player_season_total_stats)
 
     return player_stats
 

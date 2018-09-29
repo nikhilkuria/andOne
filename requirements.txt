@@ -4,10 +4,10 @@ chardet==3.0.4
 colorama==0.3.9
 enum34==1.1.6
 idna==2.7
-nba-data==1.9.2
-nba-py==0.1.1a2
+nba-api==1.0.4
 prettytable==0.7.2
 prompt-toolkit==1.0.15
+py==1.6.0
 Pygments==2.2.0
 pyparsing==2.2.1
 python-Levenshtein==0.12.0

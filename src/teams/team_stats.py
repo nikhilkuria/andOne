@@ -1,10 +1,9 @@
-import logging
+import logging,json
 from typing import Tuple
 
-from nba_py import team
-from nba_py.constants import TEAMS
+from nba_api.stats.endpoints.commonteamroster import CommonTeamRoster
 
-from constants import SEASON
+from constants import TEAMS, SEASON
 from teams import TeamNotFoundException
 
 logger = logging.getLogger('pynba.teams')
@@ -65,7 +64,6 @@ def get_team_roster(team_name_input: str) -> str:
     team_name, team_id = _parse_team_name(team_name_input)
     logger.info('Fetching roster for team {team_name}'.format(team_name=team_name))
 
-    team_details = team.TeamCommonRoster(team_id, SEASON)
-
-    return team_name, team_details.roster()
+    team_details = CommonTeamRoster(team_id, SEASON).get_normalized_dict()
+    return team_name, team_details["CommonTeamRoster"]
 
