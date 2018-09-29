@@ -3,7 +3,7 @@ from typing import List
 
 from nubia import command, argument
 
-from players import player_stats, PlayerNotFoundException
+from players import player_stats, PlayerNotFoundException, MultiplePlayersFoundException
 from visual import stacked_graph
 
 logger = logging.getLogger('pynba.command.player')
@@ -48,6 +48,12 @@ class Player:
                     print(stacked_graph.build_stacked_graph(list(stats.keys()), list(stats.values()), stat_name))
         except PlayerNotFoundException:
             error_message = 'No player found for the given name, {first_name} {last_name}'\
+                            .format(first_name=first_name,
+                                    last_name=last_name)
+            logger.error(error_message)
+            print(error_message)
+        except MultiplePlayersFoundException:
+            error_message = 'Multiple players found for the given name, {first_name} {last_name}'\
                             .format(first_name=first_name,
                                     last_name=last_name)
             logger.error(error_message)

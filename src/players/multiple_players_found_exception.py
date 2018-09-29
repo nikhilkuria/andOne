@@ -1,0 +1,3 @@
+
+class MultiplePlayersFoundException(Exception):
+    pass
