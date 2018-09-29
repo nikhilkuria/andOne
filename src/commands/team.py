@@ -3,7 +3,7 @@ import logging
 from nubia import command, argument
 
 from teams import team_stats, TeamNotFoundException
-from visual import tables
+from visual import tables, headers
 from constants import TEAM_ROSTER_HEADERS
 
 logger = logging.getLogger('pynba.command.team')
@@ -22,8 +22,9 @@ class Team:
         try:
             logger.info('Team roster action called on {name}'
                         .format(name=team_name))
-            response = team_stats.get_team_roster(team_name)
+            team_name, response = team_stats.get_team_roster(team_name)
             formatted_response = tables.build_tables_from_json(TEAM_ROSTER_HEADERS, list(response))
+            print(headers.build_upper_header(headers.build_padded_header(team_name)))
             print(formatted_response)
         except TeamNotFoundException:
             error_message = 'No team found for the given name {name}. ' \
