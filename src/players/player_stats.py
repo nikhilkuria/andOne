@@ -4,6 +4,7 @@ from typing import Dict, List, DefaultDict
 
 from nba_api.stats.endpoints.playercareerstats import PlayerCareerStats
 from nba_api.stats.static import players as PlayerHelper
+from nba_api.stats.library.parameters import PerModeSimple
 
 from .player_not_found_exception import PlayerNotFoundException
 from .multiple_players_found_exception import MultiplePlayersFoundException
@@ -59,10 +60,10 @@ def get_player_stats(first_name: str, last_name: str) -> Dict:
                         last_name=last_name,
                         player_id=player_id))
 
-    all_player_stats = PlayerCareerStats(player_id).get_normalized_dict()
-    player_season_total_stats = all_player_stats['SeasonTotalsRegularSeason']
+    all_player_stats = PlayerCareerStats(player_id, PerModeSimple.per_game).get_normalized_dict()
+    yoy_stats = all_player_stats['SeasonTotalsRegularSeason']
 
-    player_stats = _format_results(player_season_total_stats)
+    player_stats = _format_results(yoy_stats)
 
     return player_stats
 
