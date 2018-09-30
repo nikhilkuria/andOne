@@ -7,9 +7,12 @@ TODO
 
 andOne supports the following commands
 
-__##### Team__
+* team
+* player
 
-###### Roster
+#### team
+
+###### roster
 
 `team roster <team name>`
 
@@ -32,9 +35,9 @@ Can be any of the following
 
 ![Alt Text](https://media.giphy.com/media/WwZgsK4LcH3BllPK0Y/giphy.gif)
 
-__##### Player__
+#### player
 
-###### Year On Year
+###### year-on-year
 
 `player year-on-year <player name> <stat-names>`
 
