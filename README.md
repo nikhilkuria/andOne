@@ -7,7 +7,7 @@ TODO
 
 andOne supports the following commands
 
-##### Team
+__##### Team__
 
 ###### Roster
 
@@ -32,7 +32,7 @@ Can be any of the following
 
 ![Alt Text](https://media.giphy.com/media/WwZgsK4LcH3BllPK0Y/giphy.gif)
 
-##### Player
+__##### Player__
 
 ###### Year On Year
 
