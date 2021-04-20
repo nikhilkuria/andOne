@@ -7,7 +7,7 @@ idna==2.7
 nba-api==1.0.4
 prettytable==0.7.2
 prompt-toolkit==1.0.15
-py==1.6.0
+py==1.10.0
 Pygments==2.2.0
 pyparsing==2.2.1
 python-Levenshtein==0.12.0
